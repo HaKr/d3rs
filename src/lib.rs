@@ -22,3 +22,5 @@ mod continuous_mapper;
 pub use continuous_mapper::*;
 
 pub mod data_collections;
+
+pub mod scales;
