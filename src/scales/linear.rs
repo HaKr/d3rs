@@ -3,12 +3,7 @@ use std::{
     ops::{Add, AddAssign, Sub},
 };
 
-#[derive(Debug)]
-pub enum ScaleError {
-    DimensionTooSmall,
-    OutOfRange { explain: String },
-    RangeExceedsMaximum { explain: String },
-}
+use super::{DomainScale, Result, ScaleError};
 
 pub trait IterableScale<DT>
 where
@@ -17,15 +12,7 @@ where
     fn iter(&self) -> DomainIter<DT>;
     fn intervals(&self, step: DT) -> DomainIter<DT>;
 }
-pub trait DomainScale<DT>
-where
-    DT: PartialEq + PartialOrd + Debug + Display + Copy + Sub<DT, Output = DT> + AddAssign<DT>,
-{
-    fn domain_to_coordinate(&self, codomain: DT) -> Option<usize>;
-    fn coordinate_to_domain(&self, coordinate: usize) -> Option<DT>;
-}
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct Linear<DT>
 where
@@ -64,7 +51,7 @@ where
         + Sub<DT, Output = DT>,
     Self: ConvertToFloat<DT>,
 {
-    pub fn try_new(start: DT, end: DT, dimension: usize) -> Result<Self, ScaleError> {
+    pub fn try_new(start: DT, end: DT, dimension: usize) -> Result<Self> {
         if dimension < 5 {
             return Err(ScaleError::DimensionTooSmall);
         }
@@ -234,24 +221,8 @@ implement_numerical_traits!(u16, 1, u16::MIN, u16::MAX - 1);
 implement_numerical_traits!(f32, 0.0, f32::MIN, f32::MAX);
 implement_numerical_traits!(f64, 0.0, f64::MIN, f64::MAX);
 
-impl std::error::Error for ScaleError {}
-
-impl Display for ScaleError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ScaleError::OutOfRange { explain } => {
-                f.write_fmt(format_args!("Out of range: {}", explain))
-            }
-            ScaleError::RangeExceedsMaximum { explain } => {
-                f.write_fmt(format_args!("Range too large {}", explain))
-            }
-            ScaleError::DimensionTooSmall => f.write_str("Dimension is too small."),
-        }
-    }
-}
-
 #[cfg(test)]
-fn show_result<DT>(scale: Result<Linear<DT>, ScaleError>)
+fn show_result<DT>(scale: Result<Linear<DT>>)
 where
     DT: PartialEq + PartialOrd + Debug + Display + Copy + Sub<DT, Output = DT>,
 {

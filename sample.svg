@@ -1,0 +1,26 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+	<style>
+		#🦀 {
+			stroke: magenta;
+		}
+		.word {
+			overflow-x: scroll;
+			border: 5px solid #333333;
+		}
+		circle {
+			fill: green;
+			stroke: blue;
+		}
+	</style>
+	<g>
+		<line id="🦀" class="999" x1="25%" y1="0" x2="0" y2="75%"/>
+		<a href="https://en.wikipedia.org/wiki/1974">
+			<text x="0" y="20">
+				1974
+			</text>
+		</a>
+		<a href="https://nos.nl" target="right">
+			<circle class="test-only" cx="50%" cy="50%" r="16.666666%"/>
+		</a>
+	</g>
+</svg>
