@@ -212,11 +212,21 @@ macro_rules! implement_numerical_traits {
     };
 }
 
+#[cfg(target_family = "wasm")]
+implement_numerical_traits!(isize, 1, isize::MIN, isize::MAX);
+#[cfg(target_family = "wasm")]
+implement_numerical_traits!(usize, 1, 0, usize::MAX);
+
+#[cfg(not(target_family = "wasm"))]
+implement_numerical_traits!(isize, 1, -9_007_199_254_740_991, 9_007_199_254_740_990);
+#[cfg(not(target_family = "wasm"))]
+implement_numerical_traits!(usize, 1, 0, 9_007_199_254_740_990);
+
 implement_numerical_traits!(i64, 1, -9_007_199_254_740_991, 9_007_199_254_740_990);
+implement_numerical_traits!(u64, 1, 0, 9_007_199_254_740_990);
+implement_numerical_traits!(u32, 1, u32::MIN, u32::MAX - 1);
 implement_numerical_traits!(i32, 1, i32::MIN, i32::MAX - 1);
 implement_numerical_traits!(i16, 1, i16::MIN, i16::MAX - 1);
-implement_numerical_traits!(usize, 1, 0, 9_007_199_254_740_990);
-implement_numerical_traits!(u32, 1, u32::MIN, u32::MAX - 1);
 implement_numerical_traits!(u16, 1, u16::MIN, u16::MAX - 1);
 implement_numerical_traits!(f32, 0.0, f32::MIN, f32::MAX);
 implement_numerical_traits!(f64, 0.0, f64::MIN, f64::MAX);
